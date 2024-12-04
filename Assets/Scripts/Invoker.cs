@@ -1,28 +1,68 @@
 using Chapter.Command;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Chapter.Command
 {
-    public class Invoker : MonoBehaviour
+    class Invoker : MonoBehaviour
     {
-        Stack<Command> stack;
-        float timeToRecordMousePos = 0.1f;
-
-        // Update is called once per frame
-        void Update()
+        private bool _isRecording;
+        private bool _isReplaying;
+        private float _replayTime;
+        private float _recordingTime;
+        private SortedList<float, Command> _recordedCommands = new SortedList<float, Command>();
+        public void ExecuteCommand(Command command)
         {
-            timeToRecordMousePos -= Time.deltaTime;
-            if (timeToRecordMousePos < 0.0000001f)
+            command.Execute();
+            if (_isRecording)
             {
-                //record current mouse pos and put it into the stack
-                timeToRecordMousePos = 0.1f;
+                _recordedCommands.Add(_recordingTime, command);
+                Debug.Log("Recorded Time: " + _recordingTime);
+                Debug.Log("Recorded Command: " + command);
             }
         }
-
-        private void Rewind()
+        public void Record()
         {
-            //read thru stack and update new mouse pos.
+            _recordingTime = 0.0f;
+            _isRecording = true;
+        }
+        public void Replay()
+        {
+            _replayTime = 0.0f;
+            _isReplaying = true;
+            if (_recordedCommands.Count <= 0)
+            {
+                Debug.LogError("No mouse inputs to replay");
+            }
+            _recordedCommands.Reverse();
+
+        }
+        void FixedUpdate()
+        {
+            if (_isRecording)
+            {
+                _recordingTime += Time.fixedDeltaTime;
+            }
+            if (_isReplaying)
+            {
+                _replayTime += Time.fixedDeltaTime;
+                if (_recordedCommands.Any())
+                {
+                    if (Mathf.Approximately(_replayTime, _recordedCommands.Keys[0]))
+                    {
+                        Debug.Log("Replay Time: " + _replayTime);
+                        Debug.Log("Replay Command: " +
+                        _recordedCommands.Values[0]);
+                        _recordedCommands.Values[0].Execute();
+                        _recordedCommands.RemoveAt(0);
+                    }
+                }
+                else
+                {
+                    _isReplaying = false;
+                }
+            }
         }
     }
 }

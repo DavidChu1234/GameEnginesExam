@@ -8,6 +8,8 @@ namespace Chapter.ObjectPool
     public class ObjectPool : MonoBehaviour
     {
         [SerializeField] GameObject objectPrefab;
+        //List of spawn locations for ducks
+        //[SerializeField] GameObject spawnLocations;
         int maxPoolSize = 10;
         int stackDefaultCapacity = 10;
 

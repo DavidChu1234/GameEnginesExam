@@ -17,7 +17,7 @@ namespace Chapter.ObjectPool
         }
         void OnEnable()
         {
-            //rb.AddForceX(1);
+            rb.AddForceX(0.01f);
         }
         private void OnDisable()
         {
@@ -31,6 +31,7 @@ namespace Chapter.ObjectPool
         private void ResetDuck()
         {
             _currentHealth = 1;
+            this.transform.position = Vector3.zero;
         }
         public void TakeDamage(float amount)
         {

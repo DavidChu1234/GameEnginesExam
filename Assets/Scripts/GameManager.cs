@@ -1,41 +1,49 @@
 using UnityEngine;
-
-public class GameManager : MonoBehaviour
+namespace Chapter.ObjectPool
 {
-    public static GameManager Instance;
-    private int DuckSpawns = 0;
-    public int totalScore;
-    [SerializeField] GameObject DuckPrefab;
+    public class GameManager : MonoBehaviour
+    {
+        public static GameManager Instance;
+        private int DuckSpawns = 0;
+        public int totalScore;
+        [SerializeField] GameObject DuckPrefab;
+        private ObjectPool _pool;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
+        private void Awake()
         {
-            Destroy(this);
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
-        else
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            Instance = this;
+            _pool = gameObject.AddComponent<ObjectPool>();
         }
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+        void OnGUI()
+        {
+            if (GUILayout.Button("Start Wave"))
+                _pool.Spawn();
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.Mouse0))
+            // Update is called once per frame
+        void Update()
         {
-            Destroy(DuckPrefab);
-            AddScore(100);
-        }
-    }
+            if (Input.GetKey(KeyCode.Mouse0))
+            {
 
-    private void AddScore(int score)
-    {
-        totalScore += score;
+                AddScore(100);
+            }
+        }
+
+        private void AddScore(int score)
+        {
+            totalScore += score;
+        }
     }
 }

@@ -28,13 +28,25 @@ namespace Chapter.ObjectPool
         void OnGUI()
         {
             if (GUILayout.Button("Start Wave"))
-                _pool.Spawn();
+            {
+                var amount = Random.Range(1, 50);
+                if (amount <= 49)
+                {
+                    _pool.Spawn();
+                }
+                else
+                {
+                    //spawn decoy
+                }
+                    
+            }
+                
         }
 
             // Update is called once per frame
         void Update()
         {
-            if (Input.GetKey(KeyCode.Mouse0))
+            if (Input.GetKeyUp(KeyCode.Mouse1))
             {
 
                 AddScore(100);

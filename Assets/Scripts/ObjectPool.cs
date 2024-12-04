@@ -50,7 +50,7 @@ namespace Chapter.ObjectPool
             for (int i = 0; i < amount; ++i)
             {
                 var duck = Pool.Get();
-                duck.transform.position = Random.insideUnitSphere * 10;
+                duck.transform.position = Random.insideUnitSphere * 7.5f;
             }
         }
     }
